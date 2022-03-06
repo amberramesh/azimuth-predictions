@@ -1,0 +1,7 @@
+.vscode
+singularity
+reference-data
+data
+prediction_scores
+*.log
+*.rds

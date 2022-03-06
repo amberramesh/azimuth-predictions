@@ -1,0 +1,16 @@
+{
+  "name": "ucsc-dataset-query",
+  "version": "1.0.0",
+  "description": "",
+  "main": "list-datasets.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Amber Ramesh",
+  "license": "GNU GPL-3.0",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "papaparse": "^5.3.0"
+  }
+}
