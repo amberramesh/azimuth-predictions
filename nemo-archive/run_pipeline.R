@@ -1,4 +1,4 @@
-source("../pipeline/analysis.R")
+source("../pipeline/analysis.R", chdir = TRUE)
 library(R.utils)
 
 files.dir <- "data"

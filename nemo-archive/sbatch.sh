@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J azimuth-predictions-hubmap-kidney
+#SBATCH -J azimuth-predictions-nemo-archive
 #SBATCH -p general
 #SBATCH -o logs/out_%j.log
 #SBATCH -e logs/err_%j.log
