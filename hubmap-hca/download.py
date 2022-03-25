@@ -25,7 +25,7 @@ if __name__ == '__main__':
         else:
             hubmap_token = sys.argv[1]
     root_dir = 'data'
-    target_files = ['raw_expr.h5ad']
+    target_files = ['raw_expr.h5ad', 'secondary_analysis.h5ad']
 
     with open('datasets.csv', newline='') as csvfile:
         os.makedirs(root_dir, exist_ok=True)
@@ -52,5 +52,7 @@ if __name__ == '__main__':
                         logger.info(f'Created file: {file_path}')
                 except HTTPError:
                     logger.error(f'Error downloading dataset: {file_path}')
+                except BaseException as e:
+                    logger.error(e)
     
     logger.info('Completed')

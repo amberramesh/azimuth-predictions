@@ -2,6 +2,7 @@
 singularity
 reference-data
 data
+metadata
 prediction_scores
 *.log
 *.rds
