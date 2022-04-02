@@ -92,6 +92,8 @@ RunPredictionPipeline <- function(reference, query) {
     n.trees = 20,
     mapping.score.k = 100
   )
+  query.unique <- length(x = unique(x = slot(object = anchors, name = "anchors")[, "cell2"]))
+  query$percent.anchors <- round(x = query.unique / ncol(x = query) * 100, digits = 2)
 
   # Transfer cell type labels and impute protein expression
   #

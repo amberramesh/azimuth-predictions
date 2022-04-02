@@ -13,4 +13,4 @@
 #SBATCH --mem=32G
 
 module load singularity
-singularity exec -B /N/slate/amramesh/azimuth-predictions/ singularity/seurat_4.1.0.sif Rscript nemo-archive/run_pipeline.R
+singularity exec -B /N/slate/amramesh/azimuth-predictions/ ../singularity/seurat_4.1.0.sif Rscript run_pipeline.R

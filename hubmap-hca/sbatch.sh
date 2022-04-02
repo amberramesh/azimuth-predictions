@@ -21,4 +21,4 @@ singularity exec -B /N/slate/amramesh/azimuth-predictions/ singularity/seurat_4.
 # conda install -y -c conda-forge python-igraph leidenalg
 
 module load singularity
-singularity shell -B /N/slate/amramesh/azimuth-predictions/ singularity/scanpy_1.4.sif python read_cell_metadata.py
+singularity shell -B /N/slate/amramesh/azimuth-predictions/ ../singularity/scanpy_1.4.sif python read_cell_metadata.py

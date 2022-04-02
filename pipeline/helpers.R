@@ -456,3 +456,70 @@ Oxford <- function(..., join = c('and', 'or')) {
     args[length(x = args)]
   ))
 }
+
+# Cluster preservation score
+#
+# @param query Query object
+# @param ds.amount Amount to downsample query
+# @param max.dims
+# @return Returns
+#
+#' @importFrom SeuratObject Cells Idents Indices as.Neighbor
+#' @importFrom Seurat RunPCA FindNeighbors FindClusters MinMax
+#
+#' @keywords internal
+#
+#
+ClusterPreservationScore <- function(query, ds.amount, max.dims) {
+  query <- DietSeurat(object = query, assays = "refAssay", scale.data = TRUE, counts = FALSE, dimreducs = "integrated_dr")
+  if (ncol(x = query) > ds.amount) {
+    query <- subset(x = query, cells = sample(x = Cells(x = query), size = ds.amount))
+  }
+  dims <- min(50, max.dims)
+  query <- RunPCA(object = query, npcs = dims, verbose = FALSE)
+  query <- FindNeighbors(
+    object = query,
+    reduction = 'pca',
+    dims = 1:dims,
+    graph.name = paste0("pca_", c("nn", "snn"))
+  )
+  query[["orig_neighbors"]] <- as.Neighbor(x = query[["pca_nn"]])
+  query <- FindClusters(object = query, resolution = 0.6, graph.name = 'pca_snn')
+  query <- FindNeighbors(
+    object = query,
+    reduction = 'integrated_dr',
+    dims = 1:dims,
+    return.neighbor = TRUE,
+    graph.name ="integrated_neighbors_nn"
+  )
+  ids <- Idents(object = query)
+  integrated.neighbor.indices <- Indices(object = query[["integrated_neighbors_nn"]])
+  proj_ent <- unlist(x = lapply(X = 1:length(x = Cells(x = query)), function(x) {
+    neighbors <- integrated.neighbor.indices[x, ]
+    nn_ids <- ids[neighbors]
+    p_x <- prop.table(x = table(nn_ids))
+    nn_entropy <- sum(p_x * log(x = p_x), na.rm = TRUE)
+    return(nn_entropy)
+  }))
+  names(x = proj_ent) <- Cells(x = query)
+  orig.neighbor.indices <- Indices(object = query[["orig_neighbors"]])
+  orig_ent <- unlist(x = lapply(X = 1:length(x = Cells(x = query)), function(x) {
+    neighbors <- orig.neighbor.indices[x, ]
+    nn_ids <- ids[neighbors]
+    p_x <- prop.table(x = table(nn_ids))
+    nn_entropy <- sum(p_x * log(x = p_x), na.rm = TRUE)
+    return(nn_entropy)
+  }))
+  names(x = orig_ent) <- Cells(x = query)
+  stat <- median(
+    x = tapply(X = orig_ent, INDEX = ids, FUN = mean) -
+      tapply(X = proj_ent, INDEX = ids, FUN = mean)
+  )
+  if (stat <= 0) {
+    stat <- 5.00
+  } else {
+    stat <- -1 * log2(x = stat)
+    stat <- MinMax(data = stat, min = 0.00, max = 5.00)
+  }
+  return(stat)
+}
