@@ -4,5 +4,6 @@ reference-data
 data
 metadata
 prediction_scores
+dataset_scores
 *.log
 *.rds

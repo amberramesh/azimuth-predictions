@@ -31,6 +31,11 @@ RunPredictionPipeline <- function(reference, query) {
     annotation.columns <- c("class", "subclass", "cluster", "cross_species_cluster")
   }
 
+  query <- DietSeurat(
+    query,
+    assays = "RNA"
+  )
+
   query <- ConvertGeneNames(
     object = query,
     reference.names = rownames(x = reference),
@@ -71,8 +76,6 @@ RunPredictionPipeline <- function(reference, query) {
     residual.features = rownames(x = reference),
     reference.SCT.model = reference[["refAssay"]]@SCTModel.list$refmodel,
     method = "glmGamPoi",
-    ncells = 2000,
-    n_genes = 2000,
     do.correct.umi = FALSE,
     do.scale = FALSE,
     do.center = TRUE
@@ -90,7 +93,8 @@ RunPredictionPipeline <- function(reference, query) {
     features = intersect(rownames(x = reference), VariableFeatures(object = query)),
     dims = 1:max.dims,
     n.trees = 20,
-    mapping.score.k = 100
+    mapping.score.k = 100,
+    verbose = TRUE,
   )
   query.unique <- length(x = unique(x = slot(object = anchors, name = "anchors")[, "cell2"]))
   query$percent.anchors <- round(x = query.unique / ncol(x = query) * 100, digits = 2)
