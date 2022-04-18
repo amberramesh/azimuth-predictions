@@ -10,7 +10,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=2:00:00
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 
 module load singularity
 singularity exec -B /N/slate/amramesh/azimuth-predictions/ ../singularity/seurat_4.1.0.sif Rscript run_pipeline.R
