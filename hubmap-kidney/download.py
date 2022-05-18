@@ -45,11 +45,15 @@ if __name__ == '__main__':
                 logger.info(f'Downloading dataset: {file_path}')
                 response = get(api_url)
                 try:
-                    response.raise_for_status()
-                    with open(file_path, 'wb') as file:
-                        file.write(response.content)
-                        file.close()
-                        logger.info(f'Created file: {file_path}')
+                    if response.status_code == 404:
+                       logger.info(f'Skipping dataset: {file_path} (h5 file not found on server for the dataset)')
+                       os.rmdir(dataset_hubmap_id)
+                    else: 
+                        response.raise_for_status()
+                        with open(file_path, 'wb') as file:
+                            file.write(response.content)
+                            file.close()
+                            logger.info(f'Created file: {file_path}')
                 except HTTPError:
                     logger.error(f'Error downloading dataset: {file_path}')
     
