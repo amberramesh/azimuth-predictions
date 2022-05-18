@@ -2,7 +2,7 @@ source("../pipeline/analysis.R", chdir = TRUE)
 library(R.utils)
 
 files.dir <- "data"
-reference <- readRDS("../reference-data/human-kidney.Rds")
+reference <- readRDS("reference-data/human-kidney.Rds")
 if (!dir.exists("prediction_scores/")) {
   dir.create("prediction_scores/")
 }
@@ -28,7 +28,6 @@ for (data.dir in datasets) {
       print(paste0("Scores found for ", data.dir, ". Skipping..."))
       next
     }
-
     query <- LoadFileInput(file.path(files.dir, data.dir, matrix))
     query <- tryCatch(
       RunPredictionPipeline(reference = reference, query = query),
